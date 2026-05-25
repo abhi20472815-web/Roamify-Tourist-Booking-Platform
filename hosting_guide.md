@@ -75,36 +75,62 @@ You have two excellent, completely free options to host your MongoDB database in
 
 ---
 
-## Phase 2: Deploy Flask Backend API to Render (Free Web Service)
+## Phase 2: Deploy the Flask Backend API
 
-Render automatically pulls code from your GitHub repository, configures the environment, and launches the server.
+You have two excellent, free hosting providers to run your Flask API:
+
+### Option A: Render (Free Web Service Tier)
+*Render automatically pulls code from your GitHub repository and deploys it on every push.*
 
 1. **Log in to Render**:
    * Navigate to [render.com](https://render.com/) and sign up using your **GitHub account**.
 2. **Create a New Web Service**:
    * Click **"New +"** and choose **"Web Service"**.
-   * Link your GitHub account and select your **`Roamify-Tourist-Booking-Platform`** repository.
-3. **Configure Build Settings**:
+   * Select your **`Roamify-Tourist-Booking-Platform`** repository.
+3. **Configure Settings**:
    * **Name**: `roamify-backend-api`
    * **Runtime**: `Python`
-   * **Region**: Choose a region closest to your cloud database region.
    * **Branch**: `main`
-   * **Root Directory**: `backend` (Important! This points directly to the Flask directory).
+   * **Root Directory**: `backend` *(Critical! This tells Render to look inside the backend folder).*
    * **Build Command**: `pip install -r requirements.txt`
-   * **Start Command**: `gunicorn app:app` (Gunicorn is already configured in your requirements file).
-4. **Set Up Environment Variables**:
-   * Click the **"Environment"** tab on your Render Service configuration panel.
-   * Add the following keys:
-     * `MONGO_URI`: Your copied MongoDB Atlas or Clever Cloud connection string.
+   * **Start Command**: `gunicorn app:app`
+4. **Set Environment Variables**:
+   * Click the **"Environment"** tab on your Render dashboard.
+   * Add the following key-value pairs:
+     * `MONGO_URI`: Your copied database connection string.
      * `PORT`: `5000`
-     * `JWT_SECRET_KEY`: Enter a long random string (e.g., `super-secret-key-prod-987654`).
+     * `JWT_SECRET_KEY`: Enter a secure random string (e.g., `super-secret-key-prod-987654`).
      * `FLASK_ENV`: `production`
 5. **Deploy**:
-   * Click **"Create Web Service"**.
-   * Render will install dependencies and start serving. Once complete, copy the **live URL** provided at the top of the Render console (e.g., `https://roamify-backend-api.onrender.com`).
+   * Click **"Create Web Service"**. Once the deployment turns green, copy the live URL (e.g., `https://roamify-backend-api.onrender.com`).
 
 > [!WARNING]
-> **Render Free Tier Spin-up Delay**: Free Web Services on Render go to sleep after 15 minutes of inactivity. When a new visitor accesses the site, it will take about 50 seconds for the backend service to wake up and respond. This is standard behavior for Render's free tier.
+> **Render Free Tier Spin-up Delay**: Free Web Services on Render go to sleep after 15 minutes of inactivity. When a new visitor accesses the site, it will take about 50 seconds for the backend service to wake up and respond.
+
+---
+
+### Option B: Koyeb (Free Nanoinstance - Highly Recommended 🚀)
+*Koyeb is a modern hosting platform that deploys twice as fast as Render, has a more generous free tier, and **has zero cold-start delay** (your app never goes to sleep).*
+
+1. **Log in to Koyeb**:
+   * Navigate to [koyeb.com](https://www.koyeb.com/) and sign up using your **GitHub account** (no credit card required).
+2. **Create a New Service**:
+   * On your Koyeb Console, click **"Create Service"**.
+   * Select **GitHub** as the deployment method and choose your **`Roamify-Tourist-Booking-Platform`** repository.
+3. **Configure Settings**:
+   * **Branch**: `main`
+   * **Root Directory**: `backend` *(Critical! Points directly to our Flask folder).*
+   * **Buildpack**: Choose the **Python** builder (it will auto-detect dependencies).
+   * **Start Command**: Enter `gunicorn app:app` *(Important! Set this to override the default command).*
+4. **Configure Environment Variables**:
+   * Scroll down to the **"Environment Variables"** section and click **"Add Variable"**:
+     * `MONGO_URI`: Your copied database connection string.
+     * `JWT_SECRET_KEY`: Enter a secure random string.
+     * `FLASK_ENV`: `production`
+     * `PORT`: `8000` *(Koyeb’s default container port is 8000).*
+5. **Deploy**:
+   * Select the **"Nano"** size instance (which is completely covered by Koyeb's $5.50/month free credits forever).
+   * Click **"Deploy"**. Koyeb will bundle and start serving in less than 2 minutes! Copy your Koyeb live API URL (e.g., `https://roamify-yourname.koyeb.app`).
 
 ---
 
